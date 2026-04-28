@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-# OAuth 2.0 scopes requested: read-only access to Drive files and Sheets data
+# Scopes requested: read-only access to Drive files and Sheets data
 DEFAULT_GOOGLE_SCOPES = [
     "https://www.googleapis.com/auth/drive.readonly",
     "https://www.googleapis.com/auth/spreadsheets.readonly",
@@ -10,49 +10,32 @@ DEFAULT_GOOGLE_SCOPES = [
 
 def get_google_credentials(
     credentials_file: Path,
-    token_file: Path,
+    token_file: Path | None = None,  # kept for backwards compatibility, unused with Service Account
     scopes: list[str] | None = None,
 ):
-    # Returns valid OAuth2 credentials: loads from token.json if it exists and is fresh,
-    # refreshes silently if expired, or runs the browser OAuth flow to generate a new token
+    # Loads Service Account credentials from the JSON key file; no token refresh needed
     scopes = scopes or DEFAULT_GOOGLE_SCOPES
 
-    from google.auth.transport.requests import Request
-    from google.oauth2.credentials import Credentials
-    from google_auth_oauthlib.flow import InstalledAppFlow
+    from google.oauth2 import service_account
 
-    creds = None
-    # Attempts to reuse a previously saved token to avoid repeating the browser login
-    if token_file.exists():
-        creds = Credentials.from_authorized_user_file(str(token_file), scopes)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            # Silently refreshes the access token using the stored refresh token
-            creds.refresh(Request())
-        else:
-            # Opens a local browser tab for the user to grant access; saves the resulting token
-            flow = InstalledAppFlow.from_client_secrets_file(str(credentials_file), scopes)
-            creds = flow.run_local_server(port=0)
-
-        token_file.write_text(creds.to_json(), encoding="utf-8")
-
-    return creds
+    return service_account.Credentials.from_service_account_file(
+        str(credentials_file), scopes=scopes
+    )
 
 
-def build_drive_service(credentials_file: Path, token_file: Path):
-    # Builds an authenticated Google Drive API v3 client using stored or refreshed credentials
+def build_drive_service(credentials_file: Path, token_file: Path | None = None):
+    # Builds an authenticated Google Drive API v3 client using Service Account credentials
     from googleapiclient.discovery import build
 
-    creds = get_google_credentials(credentials_file=credentials_file, token_file=token_file)
+    creds = get_google_credentials(credentials_file=credentials_file)
     return build("drive", "v3", credentials=creds)
 
 
-def build_sheets_service(credentials_file: Path, token_file: Path):
-    # Builds an authenticated Google Sheets API v4 client using stored or refreshed credentials
+def build_sheets_service(credentials_file: Path, token_file: Path | None = None):
+    # Builds an authenticated Google Sheets API v4 client using Service Account credentials
     from googleapiclient.discovery import build
 
-    creds = get_google_credentials(credentials_file=credentials_file, token_file=token_file)
+    creds = get_google_credentials(credentials_file=credentials_file)
     return build("sheets", "v4", credentials=creds)
 
 

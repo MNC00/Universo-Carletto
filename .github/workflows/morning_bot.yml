@@ -34,8 +34,7 @@ jobs:
           SMTP_USERNAME=${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
           SMTP_SENDER=${{ secrets.SMTP_SENDER }}
-          GOOGLE_CREDENTIALS_FILE=credentials_GCP.json
-          GOOGLE_TOKEN_FILE=token.json
+          GOOGLE_CREDENTIALS_FILE=service_account.json
           GOOGLE_CONTACTS_SPREADSHEET_ID=${{ secrets.GOOGLE_CONTACTS_SPREADSHEET_ID }}
           GOOGLE_CONTACTS_SHEET_NAME=users
           GOOGLE_CONTENT_SPREADSHEET_ID=${{ secrets.GOOGLE_CONTENT_SPREADSHEET_ID }}
@@ -45,11 +44,8 @@ jobs:
           GOOGLE_PHOTOS_FOLDER_ID=${{ secrets.GOOGLE_PHOTOS_FOLDER_ID }}
           EOF
 
-      - name: Restore Google credentials
-        run: echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" | base64 -d > credentials_GCP.json
-
-      - name: Restore Google token
-        run: echo "${{ secrets.GOOGLE_TOKEN_JSON }}" | base64 -d > token.json
+      - name: Restore Service Account credentials
+        run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" | base64 -d > service_account.json
 
       - name: Run bot
         run: PYTHONPATH=src python -m carlo_bot.main --send
