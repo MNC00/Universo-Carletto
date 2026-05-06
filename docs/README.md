@@ -1,52 +1,27 @@
-# Come pubblicare la landing page su GitHub Pages
+# Carletto — Sito Web
 
-## Prerequisiti
+Sito statico multi-pagina servito da GitHub Pages dalla cartella `/docs`.
 
-- La repo del progetto deve essere su GitHub (pubblica o privata con piano pro/team).
-- Devi avere accesso alle impostazioni della repo.
-
----
-
-## Passaggi
-
-### 1. Copia la foto di Carlo nella cartella docs
-
-Copia il file `data/photos/carloRe.png` dentro questa cartella `docs/`:
+## Struttura
 
 ```
 docs/
-├── index.html
-├── carloRe.png    ← copia qui
-└── README.md
+├── index.html        ← Home: chi è Carletto, iniziative
+├── bot.html          ← Pagina dedicata al Buongiorno Bot
+├── contribuisci.html ← Come contribuire al progetto
+├── styles.css        ← Stylesheet condiviso
+├── SuperCarlo.jpg    ← Immagine brand
+└── README.md         ← Questo file
 ```
 
-### 2. Inserisci l'URL del Google Form
+## Deploy
 
-Apri `docs/index.html` e sostituisci il placeholder con il link reale al form:
+Il sito è pubblicato automaticamente tramite GitHub Pages:
+- **Branch:** `main`
+- **Cartella:** `/docs`
+- **URL:** https://mnc00.github.io/Carletto-Buongiorno-Bot/
 
-```html
-href="INSERISCI_QUI_URL_DEL_FORM"
-```
-
-L'URL del form lo trovi aprendo il form in modifica → **Invia** → icona del link → **Copia**.
-
-### 3. Fai il commit e push di tutto
-
-```bash
-git add docs/
-git commit -m "feat: aggiungi landing page GitHub Pages"
-git push
-```
-
-### 4. Abilita GitHub Pages
-
-1. Vai sulla repo GitHub → **Settings** → **Pages** (nel menu laterale).
-2. Sotto **"Branch"**, seleziona:
-   - Branch: `main` (o il tuo branch principale)
-   - Cartella: `/docs`
-3. Clicca **Save**.
-
-GitHub impiegherà circa 1-2 minuti a pubblicare la pagina.
+Ogni push su `main` aggiorna il sito in ~1 minuto.
 
 ### 5. Accedi alla pagina
 

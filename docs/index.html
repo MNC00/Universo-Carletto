@@ -3,133 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carlo Buongiorno Bot</title>
+  <title>Carletto — Il Buongiorno che non ti meriti</title>
+  <meta name="description" content="Hub ufficiale di tutte le iniziative dedicate a Carletto: bot, contenuti e community." />
   <link rel="icon" type="image/jpeg" href="SuperCarlo.jpg" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: #0f0f0f;
-      color: #f0f0f0;
-      font-family: 'Georgia', serif;
-      padding: 2rem 1.5rem;
-      text-align: center;
-    }
-
-    .card {
-      max-width: 520px;
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #2e2e2e;
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    }
-
-    .photo-wrapper {
-      margin-bottom: 2rem;
-    }
-
-    .photo-wrapper img {
-      width: 180px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid #c0392b;
-      box-shadow: 0 0 32px rgba(192, 57, 43, 0.5);
-    }
-
-    h1 {
-      font-size: 1.9rem;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.02em;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #c0392b;
-      font-style: italic;
-      margin-bottom: 1.8rem;
-    }
-
-    .description {
-      font-size: 0.95rem;
-      color: #b0b0b0;
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    .description strong {
-      color: #f0f0f0;
-    }
-
-    .cta-button {
-      display: inline-block;
-      background-color: #c0392b;
-      color: #ffffff;
-      font-size: 1.15rem;
-      font-family: 'Georgia', serif;
-      font-weight: bold;
-      padding: 1rem 2.4rem;
-      border-radius: 50px;
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 20px rgba(192, 57, 43, 0.45);
-    }
-
-    .cta-button:hover {
-      background-color: #a93226;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 28px rgba(192, 57, 43, 0.65);
-    }
-
-    .cta-button:active {
-      transform: translateY(0);
-    }
-
-    footer {
-      margin-top: 2.5rem;
-      font-size: 0.78rem;
-      color: #444;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="card">
 
-    <div class="photo-wrapper">
-      <img src="SuperCarlo.jpg" alt="SuperCarlo" />
-    </div>
-
-    <h1>Carlo Buongiorno Bot</h1>
-    <p class="subtitle">Il buongiorno che non ti meriti ma di cui hai bisogno.</p>
-
-    <p class="description">
-      Ogni mattina, il bot ti manda una citazione del nostro eroe, una testimonianza del suo passaggio su questa terra ed
-      il santo del giorno (o forse uno a caso) abbinato alla bestemmia più appropriata. <br><br>
-      È un progetto <strong>open source e goliardico</strong>: una volta iscritto,
-      puoi contribuire aggiungendo contenuti e foto.
-    </p>
-
-    <a
-      class="cta-button"
-      href="https://forms.gle/SD17uLfjdprAxLub6"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Iscriviti al Bot
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <img src="SuperCarlo.jpg" alt="Carletto" />
+      <span>Carletto</span>
     </a>
-  </div>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="bot.html">Buongiorno Bot</a></li>
+      <li><a href="contribuisci.html">Contribuisci</a></li>
+    </ul>
+  </nav>
 
-  <footer>
-    Fatto con ❤️  &mdash; Carlo Buongiorno Bot
+  <!-- Hero -->
+  <section class="hero">
+    <img src="SuperCarlo.jpg" alt="SuperCarlo" />
+    <h1>L'Universo di Carletto</h1>
+    <p class="tagline">Il buongiorno che non ti meriti ma di cui hai bisogno.</p>
+    <p class="lead">
+      Carletto è più di una persona: è un'istituzione, un mito, un fenomeno culturale.
+      Questo sito raccoglie tutte le iniziative nate per celebrare la sua grandezza.
+    </p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+      <a href="bot.html" class="btn">Scopri il Bot</a>
+      <a href="contribuisci.html" class="btn btn-outline">Contribuisci</a>
+    </div>
+  </section>
+
+  <!-- Initiatives -->
+  <section class="section">
+    <h2>Le Iniziative</h2>
+    <p class="section-subtitle">Tutto ciò che ruota attorno a Carletto, in un unico posto.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icon">📧</div>
+        <h3>Buongiorno Bot</h3>
+        <p>Ogni mattina, una mail con citazioni di Carlo, santi improbabili e bestemmie curate. Automatico, gratuito, inevitabile.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📸</div>
+        <h3>Archivio Fotografico</h3>
+        <p>Una collezione crescente di foto storiche e leggendarie di Carlo, curata dalla community.</p>
+      </div>
+      <div class="card">
+        <div class="icon">✍️</div>
+        <h3>Citazioni & Perle</h3>
+        <p>Le frasi più iconiche, le massime spirituali e le blasfemie più artistiche — tutto in un database collaborativo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section">
+    <h2>Chi è Carletto?</h2>
+    <p class="section-subtitle">La leggenda, spiegata in breve.</p>
+
+    <ul class="features">
+      <li>
+        <span class="bullet">⚡</span>
+        <span>Un uomo la cui sola presenza rende il mondo un posto leggermente più assurdo e decisamente più divertente.</span>
+      </li>
+      <li>
+        <span class="bullet">🎭</span>
+        <span>Fonte inesauribile di citazioni, aneddoti e situazioni al limite del credibile.</span>
+      </li>
+      <li>
+        <span class="bullet">🌅</span>
+        <span>L'ispirazione dietro un intero ecosistema open source dedicato ai buongiorno.</span>
+      </li>
+      <li>
+        <span class="bullet">🤝</span>
+        <span>Un progetto goliardico e collaborativo: chiunque può contribuire con foto, frasi e idee.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    Fatto con ❤️ dalla community di Carletto &mdash;
+    <a href="https://github.com" target="_blank" rel="noopener">Open Source</a> &amp; gratuito per sempre.
   </footer>
+
 </body>
 </html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contribuisci — Carletto</title>
+  <meta name="description" content="Unisciti alla community di Carletto: aggiungi foto, citazioni e idee al progetto." />
+  <link rel="icon" type="image/jpeg" href="SuperCarlo.jpg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <img src="SuperCarlo.jpg" alt="Carletto" />
+      <span>Carletto</span>
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="bot.html">Buongiorno Bot</a></li>
+      <li><a href="contribuisci.html" class="active">Contribuisci</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Contribuisci</h1>
+    <p class="tagline">Il progetto è tuo quanto nostro.</p>
+    <p class="lead">
+      Carletto è un progetto open source e collaborativo. Chiunque sia iscritto
+      può aggiungere contenuti: foto, citazioni, santi, bestemmie, idee.
+      Più siamo, più Carlo è glorificato.
+    </p>
+  </section>
+
+  <!-- How to contribute -->
+  <section class="section">
+    <h2>Come Contribuire</h2>
+    <p class="section-subtitle">Scegli il modo che preferisci.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icon">📸</div>
+        <h3>Aggiungi Foto</h3>
+        <p>Hai foto di Carlo? Caricale nella cartella Google Drive condivisa. Verranno automaticamente incluse nelle email del bot.</p>
+      </div>
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3>Aggiungi Citazioni</h3>
+        <p>Conosci una frase epica di Carlo? Aggiungila al Google Sheet condiviso nel tab "Quotes". Una riga = una citazione.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⛪</div>
+        <h3>Aggiungi Santi</h3>
+        <p>Inventati un santo assurdo o trova quello vero del giorno. Tab "Saints" nel foglio condiviso.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤬</div>
+        <h3>Aggiungi Bestemmie</h3>
+        <p>Creatività artistica richiesta. Tab "Blasfemie" nel foglio condiviso. La qualità è fondamentale.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="section">
+    <h2>Primi Passi</h2>
+    <p class="section-subtitle">Per ottenere accesso ai contenuti condivisi.</p>
+
+    <ol class="steps">
+      <li>
+        <span><strong>Iscriviti al bot</strong> — Se non l'hai ancora fatto, <a href="https://forms.gle/SD17uLfjdprAxLub6" target="_blank" rel="noopener" style="color: var(--accent);">compila il form</a>.</span>
+      </li>
+      <li>
+        <span><strong>Ricevi l'email di benvenuto</strong> — Contiene i link diretti al Google Sheet e alla cartella Drive.</span>
+      </li>
+      <li>
+        <span><strong>Aggiungi contenuti</strong> — Apri i documenti condivisi e scrivi. Nessuna approvazione necessaria.</span>
+      </li>
+      <li>
+        <span><strong>Goditi il risultato</strong> — I tuoi contenuti appariranno nelle email del bot a partire dal giorno dopo.</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- For devs -->
+  <section class="section">
+    <h2>Per gli Sviluppatori</h2>
+    <p class="section-subtitle">Vuoi contribuire al codice? Benvenuto.</p>
+
+    <ul class="features">
+      <li>
+        <span class="bullet">🔀</span>
+        <span><strong>Fork & PR</strong> — Il progetto è su GitHub. Fai fork, crea un branch, apri una Pull Request.</span>
+      </li>
+      <li>
+        <span class="bullet">🧪</span>
+        <span><strong>Test suite</strong> — Il progetto ha test completi con pytest. Assicurati che passino prima di pushare.</span>
+      </li>
+      <li>
+        <span class="bullet">📐</span>
+        <span><strong>Architettura pulita</strong> — Hexagonal architecture con domain/application/infrastructure layers ben separati.</span>
+      </li>
+      <li>
+        <span class="bullet">💡</span>
+        <span><strong>Idee?</strong> — Apri una Issue su GitHub per discutere nuove feature o iniziative.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    Fatto con ❤️ dalla community di Carletto &mdash;
+    <a href="https://github.com" target="_blank" rel="noopener">Open Source</a> &amp; gratuito per sempre.
+  </footer>
+
+</body>
+</html>
