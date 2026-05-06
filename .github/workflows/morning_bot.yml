@@ -43,6 +43,10 @@ jobs:
           GOOGLE_SAINTS_SHEET_NAME=santi
           GOOGLE_BLASFEMIE_SHEET_NAME=blasfemie
           GOOGLE_PHOTOS_FOLDER_ID=${{ secrets.GOOGLE_PHOTOS_FOLDER_ID }}
+          UNSUBSCRIBE_BASE_URL=${{ secrets.UNSUBSCRIBE_BASE_URL }}
+          UNSUBSCRIBE_SECRET=${{ secrets.UNSUBSCRIBE_SECRET }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          LLM_PROMPT_FILE=apps/buongiorno-bot/data/prompts/system_prompt.txt
           EOF
 
       - name: Restore Service Account credentials
