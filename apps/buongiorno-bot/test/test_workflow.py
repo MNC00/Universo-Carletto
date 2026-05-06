@@ -30,6 +30,8 @@ def test_run_workflow_sends_one_message_per_active_contact(monkeypatch):
         smtp_sender="bot@example.com",
         unsubscribe_base_url="https://example.com/unsubscribe",
         unsubscribe_secret="super-secret",
+        gemini_api_key=None,
+        llm_prompt_file="",
     )
     built_messages: list[tuple[str, list[str], str, str]] = []
     sent_recipients: list[str] = []
@@ -68,6 +70,8 @@ def test_run_workflow_dry_run_builds_one_message_per_active_contact_without_send
         smtp_sender="bot@example.com",
         unsubscribe_base_url=None,
         unsubscribe_secret=None,
+        gemini_api_key=None,
+        llm_prompt_file="",
     )
     built_recipients: list[tuple[list[str], str]] = []
     send_calls = 0

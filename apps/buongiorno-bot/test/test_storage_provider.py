@@ -52,6 +52,8 @@ def test_filesystem_storage_provider_loads_all_sources(tmp_path: Path):
         google_photos_folder_id=None,
         unsubscribe_base_url=None,
         unsubscribe_secret=None,
+        gemini_api_key=None,
+        llm_prompt_file="",
     )
 
     provider = FileSystemStorageProvider(config=config, project_root=tmp_path)
