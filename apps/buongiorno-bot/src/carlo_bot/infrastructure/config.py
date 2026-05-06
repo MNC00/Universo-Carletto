@@ -1,8 +1,7 @@
 import os
 from dataclasses import dataclass
-from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 
 # Immutable container holding all application configuration values parsed from .env
@@ -48,11 +47,8 @@ def _parse_bool(value: str) -> bool:
 
 
 def load_config() -> AppConfig:
-    # Loads the .env file from project root, reads all environment variables, validates required fields
-    project_root = Path(__file__).resolve().parents[3]
-    env_path = project_root / ".env"
-
-    load_dotenv(dotenv_path=env_path)
+    # Loads the .env file by searching upward from this file's directory, validates required fields
+    load_dotenv(find_dotenv())
 
     # Reads each variable with a sensible default where possible
     app_env = os.getenv("APP_ENV", "development")
