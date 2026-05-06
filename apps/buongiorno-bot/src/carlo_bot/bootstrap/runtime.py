@@ -5,8 +5,8 @@ from carlo_bot.infrastructure.config import AppConfig
 
 
 def get_project_root() -> Path:
-    # Resolves the project root by walking 3 parent directories up from this file's location
-    return Path(__file__).resolve().parents[3]
+    # Resolves the project root by walking 5 parent directories up from this file's location (monorepo root)
+    return Path(__file__).resolve().parents[5]
 
 
 def build_paths(project_root: Path, config: AppConfig) -> tuple[Path, Path, Path, Path, Path]:

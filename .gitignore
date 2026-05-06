@@ -22,3 +22,5 @@ token.json
 # Script Apps Script (deployment manuale, non versionato)
 integrations/apps-script/
 modifiche apps script/
+
+HOW_TO_RUN.txt

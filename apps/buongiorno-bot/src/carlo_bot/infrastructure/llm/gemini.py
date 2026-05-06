@@ -1,6 +1,7 @@
 from pathlib import Path
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 
 def generate_message_body(
@@ -9,19 +10,20 @@ def generate_message_body(
     api_key: str,
     system_prompt_file: Path,
 ) -> str:
-    # Reads the system prompt from file at call time so edits take effect without restarting
     system_prompt = system_prompt_file.read_text(encoding="utf-8").strip()
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        system_instruction=system_prompt,
-    )
+    client = genai.Client(api_key=api_key)
 
     user_message = (
         f'Citazione del giorno: "{quote}"\n'
         f"Santo del giorno: {saint}"
     )
 
-    response = model.generate_content(user_message)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=user_message,
+        config=types.GenerateContentConfig(
+            system_instruction=system_prompt
+        ),
+    )
     return response.text.strip()
