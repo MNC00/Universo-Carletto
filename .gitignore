@@ -9,6 +9,7 @@ env/
 service_account.json
 credentials_GCP.json
 token.json
+*.gs
 
 .pytest_cache/
 .coverage
@@ -18,5 +19,6 @@ token.json
 
 .DS_Store
 
-# Script e guide per Apps Script (deployment manuale, non versionato)
+# Script Apps Script (deployment manuale, non versionato)
+integrations/apps-script/
 modifiche apps script/
