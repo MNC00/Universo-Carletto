@@ -45,3 +45,21 @@ def test_build_html_body_includes_unsubscribe_link_when_url_is_provided():
 
     assert "clicca qui" in result
     assert "href=\"https://example.com/unsubscribe?email=alice@example.com&amp;sig=abc\"" in result
+
+
+def test_build_plain_body_includes_recipient_name_when_provided():
+    result = build_plain_body("Oggi spacchi tutto.", "San Gennaro", "culone", recipient_name="Alice")
+
+    assert result.startswith("Buongiorno Alice!")
+
+
+def test_build_html_body_includes_recipient_name_when_provided():
+    result = build_html_body("Oggi spacchi tutto.", "San Gennaro", "culone", recipient_name="Alice")
+
+    assert "<p>Buongiorno Alice!</p>" in result
+
+
+def test_build_plain_body_falls_back_to_generic_greeting_for_blank_name():
+    result = build_plain_body("Oggi spacchi tutto.", "San Gennaro", "culone", recipient_name="   ")
+
+    assert result.startswith("Buongiorno!")

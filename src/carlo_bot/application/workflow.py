@@ -62,18 +62,22 @@ def run_workflow(config: AppConfig, dry_run: bool) -> None:
     print("\n=== Delivery ===")
 
     # Builds one message per recipient so later steps can customize content safely per contact
-    for recipient in recipients:
+    for contact in active_contacts:
+        recipient = contact["email"]
+        recipient_name = contact.get("name")
         unsubscribe_url = _build_recipient_unsubscribe_url(config, recipient)
         plain_body = build_plain_body(
             selected_quote,
             selected_saint,
             selected_blasfemia,
+            recipient_name=recipient_name,
             unsubscribe_url=unsubscribe_url,
         )
         html_body = build_html_body(
             selected_quote,
             selected_saint,
             selected_blasfemia,
+            recipient_name=recipient_name,
             unsubscribe_url=unsubscribe_url,
         )
         message = build_email_message(

@@ -31,7 +31,7 @@ def test_run_workflow_sends_one_message_per_active_contact(monkeypatch):
         unsubscribe_base_url="https://example.com/unsubscribe",
         unsubscribe_secret="super-secret",
     )
-    built_messages: list[tuple[str, list[str]]] = []
+    built_messages: list[tuple[str, list[str], str, str]] = []
     sent_recipients: list[str] = []
 
     monkeypatch.setattr(
@@ -53,6 +53,9 @@ def test_run_workflow_sends_one_message_per_active_contact(monkeypatch):
 
     assert built_messages[0][0:2] == ("bot@example.com", ["alice@example.com"])
     assert built_messages[1][0:2] == ("bot@example.com", ["bob@example.com"])
+    assert built_messages[0][2].startswith("Buongiorno Alice!")
+    assert built_messages[1][2].startswith("Buongiorno Bob!")
+    assert "<p>Buongiorno Alice!</p>" in built_messages[0][3]
     assert "https://example.com/unsubscribe?email=alice%40example.com&sig=" in built_messages[0][2]
     assert "https://example.com/unsubscribe?email=bob%40example.com&sig=" in built_messages[1][2]
     assert "href=\"https://example.com/unsubscribe?email=alice%40example.com&amp;sig=" in built_messages[0][3]
@@ -88,5 +91,7 @@ def test_run_workflow_dry_run_builds_one_message_per_active_contact_without_send
     run_workflow(config=config, dry_run=True)
 
     assert built_recipients == [(["alice@example.com"], built_recipients[0][1]), (["bob@example.com"], built_recipients[1][1])]
+    assert built_recipients[0][1].startswith("Buongiorno Alice!")
+    assert built_recipients[1][1].startswith("Buongiorno Bob!")
     assert "Per non ricevere piu questa mail" not in built_recipients[0][1]
     assert send_calls == 0
