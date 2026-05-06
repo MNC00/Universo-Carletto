@@ -50,6 +50,8 @@ def test_filesystem_storage_provider_loads_all_sources(tmp_path: Path):
         google_saints_sheet_name="Saints",
         google_blasfemie_sheet_name="Blasfemie",
         google_photos_folder_id=None,
+        unsubscribe_base_url=None,
+        unsubscribe_secret=None,
     )
 
     provider = FileSystemStorageProvider(config=config, project_root=tmp_path)

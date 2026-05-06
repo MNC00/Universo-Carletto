@@ -67,4 +67,19 @@ def test_build_email_message_creates_inline_message_from_photo_asset():
 
     assert message.get_body(preferencelist=("plain",)).get_content().strip() == "Plain body"
     assert html_body is not None
+    assert message["To"] == "alice@example.com"
     assert any(part.get_filename() == "carlo.jpg" for part in message.walk())
+
+
+def test_build_email_message_creates_inline_message_with_to_header_for_multiple_recipients():
+    message = build_email_message(
+        sender="bot@example.com",
+        recipients=["alice@example.com", "bob@example.com"],
+        subject="Test subject",
+        plain_body="Plain body",
+        html_body="<p>Html body</p>",
+        image_asset=PhotoAsset(name="carlo.jpg", content_bytes=b"fake-image-bytes", mime_type="image/jpeg"),
+    )
+
+    assert message["To"] == "alice@example.com, bob@example.com"
+    assert message["Bcc"] is None

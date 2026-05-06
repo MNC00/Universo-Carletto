@@ -23,6 +23,7 @@ Send a daily good-morning email with a randomly selected quote, saint, blasfemia
 - Contacts data must contain `name`, `email`, and `active`
 - Quote, saint, and blasfemia sources are newline-delimited text files with blank lines ignored
 - Random selection continues to rely on Python `random.choice`
+- When unsubscribe config is present, each recipient gets a signed unsubscribe URL in the message body
 
 ## Data Contracts
 
@@ -72,8 +73,8 @@ Send a daily good-morning email with a randomly selected quote, saint, blasfemia
 | `PHOTOS_DIR` | no | `data/photos` | Photos directory path |
 | `DRY_RUN` | no | `true` | Enables no-send execution |
 | `STORAGE_BACKEND` | no | `filesystem` | `filesystem` or `google_workspace` |
-| `GOOGLE_CREDENTIALS_FILE` | no | `credentials.json` | OAuth desktop client credentials file |
-| `GOOGLE_TOKEN_FILE` | no | `token.json` | Cached OAuth token file |
+| `GOOGLE_CREDENTIALS_FILE` | no | `service_account.json` | Service Account JSON key file for Google APIs |
+| `GOOGLE_TOKEN_FILE` | no | `token.json` | Legacy OAuth token cache; unused in the standard Service Account path |
 | `GOOGLE_CONTACTS_SPREADSHEET_ID` | yes for Google backend | none | Spreadsheet ID for protected contacts dataset |
 | `GOOGLE_CONTENT_SPREADSHEET_ID` | yes for Google backend | none | Spreadsheet ID for collaborative quotes/saints/blasfemie dataset |
 | `GOOGLE_CONTACTS_SHEET_NAME` | no | `Contacts` | Contacts tab name |
@@ -81,6 +82,8 @@ Send a daily good-morning email with a randomly selected quote, saint, blasfemia
 | `GOOGLE_SAINTS_SHEET_NAME` | no | `Saints` | Saints tab name |
 | `GOOGLE_BLASFEMIE_SHEET_NAME` | no | `Blasfemie` | Blasfemie tab name |
 | `GOOGLE_PHOTOS_FOLDER_ID` | yes for Google backend | none | Drive folder ID for shared photos |
+| `UNSUBSCRIBE_BASE_URL` | no | none | Apps Script Web App base URL for signed unsubscribe links |
+| `UNSUBSCRIBE_SECRET` | no | none | Shared secret used to sign and validate unsubscribe links |
 
 Secrets stay in `.env` and are not duplicated here.
 
@@ -91,9 +94,10 @@ Secrets stay in `.env` and are not duplicated here.
 3. Application workflow instantiates a storage provider.
 4. Storage provider reads from filesystem or Google Workspace.
 5. Domain picker selects random content.
-6. Domain composer builds subject and bodies.
-7. Infrastructure email builder creates the message, including inline images from bytes.
-8. Infrastructure sender dispatches only when dry-run is disabled.
+6. Workflow optionally builds a signed unsubscribe URL per recipient.
+7. Domain composer builds subject and bodies.
+8. Infrastructure email builder creates the message, including inline images from bytes.
+9. Infrastructure sender dispatches only when dry-run is disabled.
 
 ## Module Map
 

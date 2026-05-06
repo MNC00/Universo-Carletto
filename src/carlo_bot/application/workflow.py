@@ -11,6 +11,7 @@ from carlo_bot.infrastructure.config import AppConfig
 from carlo_bot.infrastructure.email.builder import build_email_message
 from carlo_bot.infrastructure.email.sender import send_email
 from carlo_bot.infrastructure.storage import build_storage_provider
+from carlo_bot.infrastructure.unsubscribe import build_unsubscribe_url
 
 
 def run_workflow(config: AppConfig, dry_run: bool) -> None:
@@ -32,21 +33,9 @@ def run_workflow(config: AppConfig, dry_run: bool) -> None:
     selected_saint = pick_random_saint(saints)
     selected_blasfemia = pick_random_blasfemia(blasfemie)
 
-    # Builds email subject, plain-text body, and HTML body from the selected content
+    # Builds the shared email subject from the selected content
     subject = build_subject()
-    plain_body = build_plain_body(selected_quote, selected_saint, selected_blasfemia)
-    html_body = build_html_body(selected_quote, selected_saint, selected_blasfemia)
     recipients = [contact["email"] for contact in active_contacts]
-
-    # Assembles the full MIME email with the photo embedded inline via Content-ID
-    message = build_email_message(
-        sender=config.smtp_sender,
-        recipients=recipients,
-        subject=subject,
-        plain_body=plain_body,
-        html_body=html_body,
-        image_asset=selected_photo,
-    )
 
     # Prints a structured summary of configuration, loaded data, selections, and email details
     print("=== Configuration ===")
@@ -70,10 +59,48 @@ def run_workflow(config: AppConfig, dry_run: bool) -> None:
     print(f"Recipients: {recipients}")
     print(f"Inline image: {selected_photo.name}")
 
-    # Skips SMTP delivery if dry_run is active; otherwise sends the message via SMTP_SSL
+    print("\n=== Delivery ===")
+
+    # Builds one message per recipient so later steps can customize content safely per contact
+    for recipient in recipients:
+        unsubscribe_url = _build_recipient_unsubscribe_url(config, recipient)
+        plain_body = build_plain_body(
+            selected_quote,
+            selected_saint,
+            selected_blasfemia,
+            unsubscribe_url=unsubscribe_url,
+        )
+        html_body = build_html_body(
+            selected_quote,
+            selected_saint,
+            selected_blasfemia,
+            unsubscribe_url=unsubscribe_url,
+        )
+        message = build_email_message(
+            sender=config.smtp_sender,
+            recipients=[recipient],
+            subject=subject,
+            plain_body=plain_body,
+            html_body=html_body,
+            image_asset=selected_photo,
+        )
+
+        if dry_run:
+            print(f"Prepared email for: {recipient}")
+            continue
+
+        send_email(config, message)
+        print(f"Email sent to: {recipient}")
+
     if dry_run:
-        print("\nDRY_RUN enabled: email not sent.")
+        print("\nDRY_RUN enabled: emails not sent.")
         return
 
-    send_email(config, message)
     print("\nEmail sent successfully.")
+
+
+def _build_recipient_unsubscribe_url(config: AppConfig, recipient: str) -> str | None:
+    if config.unsubscribe_base_url is None or config.unsubscribe_secret is None:
+        return None
+
+    return build_unsubscribe_url(config.unsubscribe_base_url, recipient, config.unsubscribe_secret)

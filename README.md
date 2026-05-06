@@ -40,6 +40,7 @@ La V1:
 - compone il testo della mail;
 - allega una foto;
 - invia la mail via Gmail SMTP;
+- supporta invio per-destinatario con link di disiscrizione firmato opzionale;
 - supporta dry run e invio reale da CLI;
 - include test automatici minimi.
 
@@ -49,7 +50,8 @@ Il progetto ora include una base tecnica per una V2 con storage remoto:
 - backend di storage astratto con supporto `filesystem` e scaffold `google_workspace`;
 - dataset separabili per `contacts` e per i contenuti collaborativi;
 - supporto a foto inline lette anche da bytes, non solo da file locali;
-- configurazione pronta per Google Drive e Google Sheets.
+- configurazione pronta per Google Drive e Google Sheets;
+- web app Apps Script per la disiscrizione self-service firmata.
 
 La V1 continua comunque a usare il backend locale come default.
 
@@ -76,6 +78,11 @@ Per ora non sono inclusi:
 ├─ .gitignore
 ├─ .env.example
 ├─ requirements.txt
+├─ modifiche apps script/
+│  ├─ 01_grant_access/
+│  ├─ 02_welcome_email/
+│  ├─ 03_revoke_access/
+│  └─ 04_unsubscribe_webapp/
 ├─ scripts/
 │  └─ rename_photos.py
 ├─ data/
@@ -124,9 +131,10 @@ I moduli canonici stanno nelle cartelle `bootstrap`, `application`, `domain` e `
 2. Selezione del backend di storage
 3. Lettura dati dal provider configurato
 3. Selezione casuale dei contenuti
-4. Composizione del messaggio
-5. Costruzione della mail con allegato
-6. Invio reale oppure dry run
+4. Generazione opzionale del link di disiscrizione firmato per ciascun destinatario
+5. Composizione del messaggio
+6. Costruzione della mail con allegato
+7. Invio reale oppure dry run
 
 ---
 
@@ -198,7 +206,7 @@ DRY_RUN=true
 
 STORAGE_BACKEND=filesystem
 
-GOOGLE_CREDENTIALS_FILE=credentials.json
+GOOGLE_CREDENTIALS_FILE=service_account.json
 GOOGLE_TOKEN_FILE=token.json
 GOOGLE_CONTACTS_SPREADSHEET_ID=
 GOOGLE_CONTENT_SPREADSHEET_ID=
@@ -207,6 +215,9 @@ GOOGLE_QUOTES_SHEET_NAME=Quotes
 GOOGLE_SAINTS_SHEET_NAME=Saints
 GOOGLE_BLASFEMIE_SHEET_NAME=Blasfemie
 GOOGLE_PHOTOS_FOLDER_ID=
+
+UNSUBSCRIBE_BASE_URL=
+UNSUBSCRIBE_SECRET=
 ```
 
 ### Significato delle variabili
@@ -224,7 +235,17 @@ GOOGLE_PHOTOS_FOLDER_ID=
 - `PHOTOS_DIR`: cartella delle immagini.
 - `DRY_RUN`: se `true`, costruisce la mail ma non la invia.
 - `STORAGE_BACKEND`: backend storage attivo, `filesystem` o `google_workspace`.
-- `GOOGLE_*`: configurazione necessaria per la V2 con Drive e Sheets.
+- `GOOGLE_CREDENTIALS_FILE`: file JSON del Service Account usato per leggere Google Sheets e Drive.
+- `GOOGLE_TOKEN_FILE`: file token OAuth legacy; con il Service Account non viene usato nel flusso standard.
+- gli altri `GOOGLE_*`: configurazione necessaria per la V2 con Drive e Sheets.
+- `UNSUBSCRIBE_BASE_URL`: URL del Web App Apps Script che riceve le richieste di disiscrizione.
+- `UNSUBSCRIBE_SECRET`: secret condivisa usata per firmare i link di disiscrizione.
+
+### Disiscrizione self-service
+
+Se configuri sia `UNSUBSCRIBE_BASE_URL` sia `UNSUBSCRIBE_SECRET`, il bot genera un link di disiscrizione firmato diverso per ogni destinatario e lo inserisce nel body plain text e HTML.
+
+L'endpoint da pubblicare si trova in [modifiche apps script/04_unsubscribe_webapp/README.md](modifiche%20apps%20script/04_unsubscribe_webapp/README.md) e il codice Apps Script e in [modifiche apps script/04_unsubscribe_webapp/unsubscribe_webapp.gs](modifiche%20apps%20script/04_unsubscribe_webapp/unsubscribe_webapp.gs).
 
 ### Nota importante su Gmail
 

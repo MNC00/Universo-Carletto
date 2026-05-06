@@ -12,7 +12,32 @@ def _validate_quote(quote: str) -> None:
         raise ValueError("Quote cannot be empty.")
 
 
-def build_plain_body(quote: str, saint: str, blasfemia: str) -> str:
+def _build_plain_unsubscribe_footer(unsubscribe_url: str | None) -> str:
+  if unsubscribe_url is None:
+    return ""
+
+  return (
+    "\n\n"
+    "Per non ricevere piu questa mail, usa questo link:\n"
+    f"{unsubscribe_url}"
+  )
+
+
+def _build_html_unsubscribe_footer(unsubscribe_url: str | None) -> str:
+  if unsubscribe_url is None:
+    return ""
+
+  safe_url = escape(unsubscribe_url.strip(), quote=True)
+  return (
+    "\n        <hr>\n"
+    "        <p style=\"font-size: 0.9em;\">"
+    "Se vuoi disiscriverti, "
+    f"<a href=\"{safe_url}\">clicca qui</a>."
+    "</p>"
+  )
+
+
+def build_plain_body(quote: str, saint: str, blasfemia: str, unsubscribe_url: str | None = None) -> str:
     # Assembles the plain-text email body by combining quote, saint name, and blasfemia into a template
     _validate_quote(quote)
 
@@ -21,11 +46,12 @@ def build_plain_body(quote: str, saint: str, blasfemia: str) -> str:
         f'Tieni ben a mente che:\n"{quote}"\n\n'
         "Passa una buona giornata,\n"
         f"{saint.capitalize()} {blasfemia}\n\n"
-        "Carlo"
+    "Carlo"
+    f"{_build_plain_unsubscribe_footer(unsubscribe_url)}"
     )
 
 
-def build_html_body(quote: str, saint: str, blasfemia: str) -> str:
+def build_html_body(quote: str, saint: str, blasfemia: str, unsubscribe_url: str | None = None) -> str:
     # Assembles the HTML email body; HTML-escapes all dynamic content to prevent injection
     _validate_quote(quote)
 
@@ -47,6 +73,7 @@ def build_html_body(quote: str, saint: str, blasfemia: str) -> str:
           <strong>{safe_saint.capitalize()} {safe_blasfemia}</strong>
         </p>
         <p>Carlo</p>
+        {_build_html_unsubscribe_footer(unsubscribe_url)}
       </body>
     </html>
     """.strip()

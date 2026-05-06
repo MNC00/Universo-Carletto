@@ -6,6 +6,7 @@ venv/
 env/
 
 .env
+service_account.json
 credentials_GCP.json
 token.json
 

@@ -30,6 +30,8 @@ class AppConfig:
     google_saints_sheet_name: str
     google_blasfemie_sheet_name: str
     google_photos_folder_id: str | None
+    unsubscribe_base_url: str | None
+    unsubscribe_secret: str | None
 
 
 def _parse_bool(value: str) -> bool:
@@ -66,7 +68,7 @@ def load_config() -> AppConfig:
     blasfemie_file = os.getenv("BLASFEMIE_FILE") or os.getenv("BLASFEMIE_DIR", "data/quotes/blasfemie.txt")
     dry_run_raw = os.getenv("DRY_RUN", "true")
     storage_backend = os.getenv("STORAGE_BACKEND", "filesystem").strip().lower()
-    google_credentials_file = os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
+    google_credentials_file = os.getenv("GOOGLE_CREDENTIALS_FILE", "service_account.json")
     google_token_file = os.getenv("GOOGLE_TOKEN_FILE", "token.json")
     google_contacts_spreadsheet_id = _empty_to_none(os.getenv("GOOGLE_CONTACTS_SPREADSHEET_ID"))
     google_content_spreadsheet_id = _empty_to_none(os.getenv("GOOGLE_CONTENT_SPREADSHEET_ID"))
@@ -75,6 +77,8 @@ def load_config() -> AppConfig:
     google_saints_sheet_name = os.getenv("GOOGLE_SAINTS_SHEET_NAME", "Saints")
     google_blasfemie_sheet_name = os.getenv("GOOGLE_BLASFEMIE_SHEET_NAME", "Blasfemie")
     google_photos_folder_id = _empty_to_none(os.getenv("GOOGLE_PHOTOS_FOLDER_ID"))
+    unsubscribe_base_url = _empty_to_none(os.getenv("UNSUBSCRIBE_BASE_URL"))
+    unsubscribe_secret = _empty_to_none(os.getenv("UNSUBSCRIBE_SECRET"))
 
     # Validates that all required SMTP fields are present
     if not smtp_host:
@@ -89,6 +93,8 @@ def load_config() -> AppConfig:
         raise ValueError("Missing SMTP_SENDER")
     if storage_backend not in {"filesystem", "google_workspace"}:
         raise ValueError(f"Unsupported STORAGE_BACKEND: {storage_backend}")
+    if (unsubscribe_base_url is None) != (unsubscribe_secret is None):
+        raise ValueError("UNSUBSCRIBE_BASE_URL and UNSUBSCRIBE_SECRET must be configured together")
 
     # Validates Google-specific fields only when the google_workspace backend is selected
     if storage_backend == "google_workspace":
@@ -122,6 +128,8 @@ def load_config() -> AppConfig:
         google_saints_sheet_name=google_saints_sheet_name,
         google_blasfemie_sheet_name=google_blasfemie_sheet_name,
         google_photos_folder_id=google_photos_folder_id,
+        unsubscribe_base_url=unsubscribe_base_url,
+        unsubscribe_secret=unsubscribe_secret,
     )
 
 
