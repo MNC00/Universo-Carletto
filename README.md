@@ -1,22 +1,56 @@
-Hai ragione. Ti lascio direttamente un **unico file `README.md` completo**, pronto da copiare così com’è nella repo.
+# Universo Carletto
 
-```md
-# Carlo Random Good Morning Bot
+Monorepo per tutte le iniziative dedicate a Carletto.
 
-## Context Hub
+## Struttura
 
-Il file centrale di contesto del progetto e` [CONTEXT.md](c:/Users/Francesco%20Mancini/OneDrive%20-%20Agile%20Lab/Documenti/Personale/PersonalScripts/Carletto%20Buongiorno%20Bot/CONTEXT.md). Contiene capability, invarianti di business, catalogo configurazioni, topologia runtime e scaffold agentico. README e CONTEXT non devono divergere: il dettaglio architetturale vive nel CONTEXT hub.
+```
+apps/
+  buongiorno-bot/   # Python bot: email giornaliera con citazioni, santi, bestemmie, foto
+  website/          # Sito statico multi-pagina (GitHub Pages)
+integrations/
+  apps-script/      # Google Apps Script: form signup, unsubscribe webapp, welcome email
+packages/
+  branding/         # Asset condivisi (immagini, loghi)
+```
 
-Piccolo progetto Python che invia via email un messaggio di buongiornata con:
-- una foto casuale di Carlo;
-- una citazione casuale;
-- un testo composto automaticamente.
+## Apps
 
-La V1 è pensata come side project didattico: piccola, completa, comprensibile e gestibile senza infrastruttura complessa.
+### 🤖 Buongiorno Bot (`apps/buongiorno-bot/`)
 
----
+Bot Python che invia ogni mattina un'email personalizzata con contenuti di Carlo.
+Eseguito automaticamente via GitHub Actions (`.github/workflows/morning_bot.yml`).
 
-## Obiettivo
+Vedi [`apps/buongiorno-bot/`](apps/buongiorno-bot/) per istruzioni locali.
+
+### 🌐 Website (`apps/website/`)
+
+Sito statico HTML/CSS servito da GitHub Pages tramite GitHub Actions (`.github/workflows/deploy_website.yml`).
+
+**URL:** https://mnc00.github.io/Universo-Carletto/
+
+## Integrations
+
+### Google Apps Script (`integrations/apps-script/`)
+
+Script Apps Script per:
+- `01_grant_access/` — Form di iscrizione → accesso ai documenti condivisi
+- `02_welcome_email/` — Email di benvenuto automatica
+- `03_revoke_access/` — Revoca accesso in caso di disiscrizione
+- `04_unsubscribe_webapp/` — Web App per disiscrizione sicura con link HMAC firmati
+
+## Sviluppo Locale
+
+```bash
+# Dalla root del monorepo
+cd apps/buongiorno-bot
+python -m venv ../../.venv
+pip install -r requirements.txt
+$env:PYTHONPATH = "src"
+python -m carlo_bot.main --dry-run
+```
+
+Il contesto architetturale completo è in [`CONTEXT.md`](CONTEXT.md).
 
 L'obiettivo del progetto è allenare competenze pratiche di sviluppo software costruendo una piccola automazione end-to-end.
 
