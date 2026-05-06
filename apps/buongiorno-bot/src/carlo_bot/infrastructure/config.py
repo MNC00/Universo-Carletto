@@ -31,6 +31,8 @@ class AppConfig:
     google_photos_folder_id: str | None
     unsubscribe_base_url: str | None
     unsubscribe_secret: str | None
+    gemini_api_key: str | None
+    llm_prompt_file: str
 
 
 def _parse_bool(value: str) -> bool:
@@ -75,6 +77,8 @@ def load_config() -> AppConfig:
     google_photos_folder_id = _empty_to_none(os.getenv("GOOGLE_PHOTOS_FOLDER_ID"))
     unsubscribe_base_url = _empty_to_none(os.getenv("UNSUBSCRIBE_BASE_URL"))
     unsubscribe_secret = _empty_to_none(os.getenv("UNSUBSCRIBE_SECRET"))
+    gemini_api_key = _empty_to_none(os.getenv("GEMINI_API_KEY"))
+    llm_prompt_file = os.getenv("LLM_PROMPT_FILE", "data/prompts/system_prompt.txt")
 
     # Validates that all required SMTP fields are present
     if not smtp_host:
@@ -126,6 +130,8 @@ def load_config() -> AppConfig:
         google_photos_folder_id=google_photos_folder_id,
         unsubscribe_base_url=unsubscribe_base_url,
         unsubscribe_secret=unsubscribe_secret,
+        gemini_api_key=gemini_api_key,
+        llm_prompt_file=llm_prompt_file,
     )
 
 

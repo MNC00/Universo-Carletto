@@ -1,5 +1,6 @@
-from carlo_bot.domain.composer import build_html_body, build_plain_body, build_subject
+from carlo_bot.domain.composer import build_html_body, build_html_body_ai, build_plain_body, build_plain_body_ai, build_subject
 from carlo_bot.bootstrap.runtime import get_project_root
+from carlo_bot.infrastructure.llm import generate_message_body
 from carlo_bot.domain.picker import (
     pick_active_contacts,
     pick_random_blasfemia,
@@ -61,25 +62,58 @@ def run_workflow(config: AppConfig, dry_run: bool) -> None:
 
     print("\n=== Delivery ===")
 
+    # Attempts to generate the message body via LLM; falls back to the static template on any failure
+    ai_generated_body: str | None = None
+    if config.gemini_api_key:
+        try:
+            prompt_path = get_project_root() / config.llm_prompt_file
+            ai_generated_body = generate_message_body(
+                quote=selected_quote,
+                saint=selected_saint,
+                api_key=config.gemini_api_key,
+                system_prompt_file=prompt_path,
+            )
+            print(f"LLM body generated ({len(ai_generated_body)} chars)")
+        except Exception as exc:  # noqa: BLE001
+            print(f"LLM generation failed, using static template: {exc}")
+    else:
+        print("GEMINI_API_KEY not set, using static template")
+
     # Builds one message per recipient so later steps can customize content safely per contact
     for contact in active_contacts:
         recipient = contact["email"]
         recipient_name = contact.get("name")
         unsubscribe_url = _build_recipient_unsubscribe_url(config, recipient)
-        plain_body = build_plain_body(
-            selected_quote,
-            selected_saint,
-            selected_blasfemia,
-            recipient_name=recipient_name,
-            unsubscribe_url=unsubscribe_url,
-        )
-        html_body = build_html_body(
-            selected_quote,
-            selected_saint,
-            selected_blasfemia,
-            recipient_name=recipient_name,
-            unsubscribe_url=unsubscribe_url,
-        )
+        if ai_generated_body:
+            plain_body = build_plain_body_ai(
+                ai_generated_body,
+                selected_saint,
+                selected_blasfemia,
+                recipient_name=recipient_name,
+                unsubscribe_url=unsubscribe_url,
+            )
+            html_body = build_html_body_ai(
+                ai_generated_body,
+                selected_saint,
+                selected_blasfemia,
+                recipient_name=recipient_name,
+                unsubscribe_url=unsubscribe_url,
+            )
+        else:
+            plain_body = build_plain_body(
+                selected_quote,
+                selected_saint,
+                selected_blasfemia,
+                recipient_name=recipient_name,
+                unsubscribe_url=unsubscribe_url,
+            )
+            html_body = build_html_body(
+                selected_quote,
+                selected_saint,
+                selected_blasfemia,
+                recipient_name=recipient_name,
+                unsubscribe_url=unsubscribe_url,
+            )
         message = build_email_message(
             sender=config.smtp_sender,
             recipients=[recipient],
